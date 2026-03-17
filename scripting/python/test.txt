@@ -1,0 +1,113 @@
+SetFlag(511, 0);
+SpfCommand(73, 0, 0, 0);
+Music(-1, 60, 0);
+
+DisplayTextbox(1);
+SetNametag(dummy1);
+
+ScreenFade(1, 0, 60);
+SkipByte_0x02(6);
+Text(op_0x16(1, 0, 60));
+SkipByte_0x02(0);
+WaitForInput();
+ScreenFade(0, 0, 60);
+
+SkipByte_0x02(6);
+Text(op_0x16(0, 0, 60));
+SkipByte_0x02(0);
+WaitForInput();
+ScreenFade(1, 1, 60);
+
+SkipByte_0x02(6);
+Text(op_0x16(1, 1, 60));
+SkipByte_0x02(0);
+WaitForInput();
+ScreenFade(0, 0, 60);
+
+ScreenFade(1, 2, 60);
+SkipByte_0x02(6);
+Text(op_0x16(1, 2, 60));
+SkipByte_0x02(0);
+WaitForInput();
+ScreenFade(0, 0, 60);
+
+ScreenFade(1, 3, 60);
+SkipByte_0x02(6);
+Text(op_0x16(1, 3, 60));
+SkipByte_0x02(0);
+WaitForInput();
+ScreenFade(0, 0, 60);
+
+ScreenFade(1, 4, 60);
+SkipByte_0x02(6);
+Text(op_0x16(1, 4, 60));
+SkipByte_0x02(0);
+WaitForInput();
+ScreenFade(0, 0, 60);
+
+ScreenFade(1, 5, 60);
+SkipByte_0x02(6);
+Text(op_0x16(1, 5, 60));
+SkipByte_0x02(0);
+WaitForInput();
+ScreenFade(0, 0, 60);
+
+ScreenFade(1, 6, 60);
+SkipByte_0x02(6);
+Text(op_0x16(1, 6, 60));
+SkipByte_0x02(0);
+WaitForInput();
+ScreenFade(0, 0, 60);
+
+ScreenFade(1, 7, 60);
+SkipByte_0x02(6);
+Text(op_0x16(1, 7, 60));
+SkipByte_0x02(0);
+WaitForInput();
+ScreenFade(0, 0, 60);
+
+ScreenFade(1, 8, 60);
+SkipByte_0x02(6);
+Text(op_0x16(1, 8, 60));
+SkipByte_0x02(0);
+WaitForInput();
+ScreenFade(0, 0, 60);
+
+ScreenFade(1, 9, 60);
+SkipByte_0x02(6);
+Text(op_0x16(1, 9, 60));
+SkipByte_0x02(0);
+WaitForInput();
+ScreenFade(0, 0, 60);
+
+ScreenFade(1, 10, 60);
+SkipByte_0x02(6);
+Text(op_0x16(1, 10, 60));
+SkipByte_0x02(0);
+WaitForInput();
+ScreenFade(0, 0, 60);
+
+DisplayTextbox(0);
+
+SpfCommand(45, 0, 0, 0);
+GoToLabel(503);
+	DialogWindowTextIndex(0, 0);
+	Text(Which camera mode would you like to use?);
+	DialogWindowTextIndex(1, 0);
+	Text(Manual);
+	DialogWindowTextIndex(2, 0);
+	Text(Automatic);
+	DialogWindowTextIndex(3, 511);
+	DefineLabel(503);
+FlagCheck(511, 0, 0);
+NoOp();
+GoToLabel(504);
+	SpfCommand(70, 1, 0, 0);
+	GoToLabel(505);
+		DefineLabel(504);
+	SpfCommand(70, 0, 0, 0);
+	DefineLabel(505);
+SpfCommand(73, 1, 0, 0);
+SetFlag(511, 0);
+op_0x11();
+End();
