@@ -1,0 +1,56 @@
+//------------------------------------------------
+//--- 010 Editor v12.0.1 Binary Template
+//
+//      File: BND_64.bt
+//   Authors: not nsmhd
+//   Version: 1.0
+//   Purpose: Base template for BND tables
+//  Category: UDG
+// File Mask: *64.bnd
+//  ID Bytes: 
+//   History: 8/3/2025: Initial version
+//------------------------------------------------
+
+#define ADDRESS_SPACE_64BIT
+#include "Types.bt"
+
+struct SubTableHeader
+{
+    offset_t DataOffset;
+    size_t EntryCount;
+};
+
+typedef struct
+{
+    wstrptr_t Japanese <name="Japanese">;
+    wstrptr_t English  <name="English">;
+    wstrptr_t Chinese  <name="Chinese">;
+    wstrptr_t Korean  <name="Korean">;
+} LocalizedEntryName <name="Localized Names">;
+
+typedef struct
+{
+    offset_t OffsetToOffset; // Shade Inc knew what they were doing
+    SET_PRE_POS;
+    FSeek(OffsetToOffset);
+    wstrptr_t String;
+    RET_PRE_POS;
+} TableString <read=ReadBNDString, optimize=false>;
+
+struct BNDBase
+{
+    size_t SubTableCount;
+    offset_t TableStringsOffset;
+
+    size_t Padding1;
+
+    SubTableHeader SubTableHeaders[SubTableCount];
+};
+
+wstring ReadBNDString(TableString& ts)
+{
+    return ts.String.Value;
+};
+
+LittleEndian();
+BNDBase Base;

@@ -1,0 +1,124 @@
+//------------------------------------------------
+//--- 010 Editor v9.0.1 Binary Template
+//
+//      File: SFL.bt
+//   Authors: James Pelster ("CaptainSwag101")
+//   Version: 0.5
+//   Purpose: Template for Danganronpa SFL "flash" format files.
+//  Category: 
+// File Mask: *.sfl
+//  ID Bytes: 4C 4C 46 53
+//   History:   0.5 - Transformation commands are in the last two tables, regardless of total count. This fixes DR1 and DR2 SFL files
+//              0.4 - Transformation commands are in tables 5 & 6, not just 6
+//              0.3 - Added support for transformation commands (working theory)
+//              0.2 - Added support for sub-entries
+//              0.1 - Initial Release
+//------------------------------------------------
+
+LittleEndian();
+
+local uint globalTableCount;
+
+typedef struct
+{
+    // Header
+    ushort              opcode;
+    ushort              dataLength;
+
+    // Contents
+    if (dataLength > 0)
+        char            data[dataLength];
+}
+transformationCommand <optimize=false>;
+
+typedef struct
+{
+    // Header
+    uint                dataLength;
+    ushort              headerLength;   // Includes the currently read bytes
+    ushort              sectionCount;
+    char                remainingHeader[headerLength - 8];
+
+    // Contents
+    if (dataLength > 0)
+        char            data[dataLength];
+}
+subentry <optimize=false>;
+
+typedef struct
+{
+    // Header
+    uint                dataLength;
+    ushort              headerLength;   // Includes the currently read bytes
+    ushort              sectionCount;
+    char                remainingHeader[headerLength - 8];
+
+    // Contents
+    if (dataLength > 0)
+        transformationCommand commands[sectionCount];
+}
+transformationSubentry <optimize=false>;
+
+typedef struct
+{
+    // Header
+    uint                entryIndex;
+    uint                dataLength;
+    ushort              unk1;   		// Sometimes is the same for multiple entries in the same table, possibly an ID?
+    ushort              subentryCount;  // unk2 must also be 1 for this to be used as the subentry count
+    uint                unk2;
+
+    // Contents
+    if (subentryCount > 0 && unk2 > 0)
+        subentry        subentries[subentryCount];
+    else
+        char            data[dataLength];
+}
+entry <optimize=false>;
+
+typedef struct
+{
+    // Header
+    uint                entryIndex;
+    uint                dataLength;
+    ushort              unk1;   		// Sometimes is the same for multiple entries in the same table, possibly an ID?
+    ushort              subentryCount;  // unk2 must also be 1 for this to be used as the subentry count
+    uint                unk2;
+
+    // Contents
+    transformationSubentry      subentries[subentryCount];
+}
+transformationEntry <optimize=false>;
+
+typedef struct
+{
+    // Header
+    uint                tableIndex;
+    uint                tableLength;
+    ushort              entryCount;
+    ushort              unk1;
+    uint                unk2;
+    
+    // Contents
+    if (tableLength > 0 && entryCount > 0)
+        if (tableIndex >= globalTableCount - 1)
+            transformationEntry entries[entryCount];
+        else
+            entry               entries[entryCount];
+}
+table <optimize=false>;
+
+struct
+{
+    // Header
+    char                signature[4];
+    ushort              versionPatch;
+    ushort              versionMinor;
+    uint                versionMajor;
+    uint                tableCount;
+    globalTableCount = tableCount;
+    
+    // Contents
+    table            tables[tableCount];
+}
+file <optimize=false>;

@@ -1,0 +1,58 @@
+//------------------------------------------------
+//--- 010 Editor v12.0.1 Binary Template
+//
+//      File: Kotodama_64.bt
+//   Authors: not nsmhd
+//   Version: 1.0
+//   Purpose: 
+//  Category: UDG
+// File Mask: kotodama64.bnd
+//  ID Bytes: 
+//   History: 8/3/2025: Initial version
+//------------------------------------------------
+
+#include "BND_64bit.bt"
+
+typedef enum<int32_t>
+{
+    BT_BREAK = 0x0,
+    BT_BURN = 0x1,
+    BT_PARALYZE = 0x2,
+    BT_KNOCKBACK = 0x3,
+    BT_DANCE = 0x4,
+    BT_LINK = 0x5,
+    BT_MOVE = 0x6,
+    BT_DETECT = 0x7
+} BulletType;
+
+typedef struct
+{
+    int32_t Capacity[8] <format=decimal>;
+    int32_t Effect[8] <format=decimal>;
+    int32_t MaxLifetime[8] <format=decimal>;
+} InitialStatsTable <optimize=false>;
+
+typedef struct
+{
+    int32_t EffectBonus;
+    int32_t CapacityBonus;
+    int32_t ShotSpeedBonus;
+
+    int32_t Cost;
+
+    int32_t Unknown1;
+    int32_t Unknown2;
+
+    LocalizedEntryName Name;
+} BlingBullet <name=Name.English.Value, optimize=false>;
+
+typedef struct
+{
+    BlingBullet BlingBullets[Base.SubTableHeaders[1].EntryCount];   
+} BlingBulletTable;
+
+FSeek(Base.SubTableHeaders[0].DataOffset);
+InitialStatsTable InitialStats;
+
+FSeek(Base.SubTableHeaders[1].DataOffset);
+BlingBulletTable BlingBullets;

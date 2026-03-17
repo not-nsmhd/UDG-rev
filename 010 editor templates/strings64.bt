@@ -1,0 +1,38 @@
+//------------------------------------------------
+//--- 010 Editor v12.0.1 Binary Template
+//
+//      File: strings64.bt
+//   Authors: not nsmhd
+//   Version: 1.0
+//   Purpose: 
+//  Category: UDG
+// File Mask: strings64.bnd
+//  ID Bytes: 
+//   History: 8/3/2025: Initial version
+//------------------------------------------------
+
+#include "BND_64bit.bt"
+
+typedef struct
+{
+    wstrptr_t Japanese <name="Japanese">;
+    wstrptr_t English  <name="English">;
+    wstrptr_t Chinese  <name="Chinese">;
+    wstrptr_t Korean  <name="Korean">;
+} LocalizedString <name="Localized String", read=ReadLocalizedString, optimize=false>;
+
+struct GlobalStringList(SubTableHeader& header)
+{
+    FSeek(header.DataOffset);
+    LocalizedString Strings[header.EntryCount];
+};
+
+string ReadLocalizedString(LocalizedString& locStr)
+{
+    if (IsValidStrPtr(locStr.English.Offset))
+        return locStr.English.Value;
+
+    return "";
+};
+
+GlobalStringList StringList(Base.SubTableHeaders[0]);

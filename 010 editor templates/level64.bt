@@ -1,0 +1,33 @@
+//------------------------------------------------
+//--- 010 Editor v12.0.1 Binary Template
+//
+//      File: level64.bt
+//   Authors: not nsmhd
+//   Version: 1.0
+//   Purpose: 
+//  Category: UDG
+// File Mask: level64.bnd
+//  ID Bytes: 
+//   History:
+//------------------------------------------------
+
+#include "BND_64bit.bt"
+
+typedef struct
+{
+    int32_t RequiredXP;
+    int32_t Index;
+} PlayerLevel <read=ReadPlayerLevel, optimize=false>;
+
+struct LevelList(SubTableHeader& header)
+{
+    FSeek(header.DataOffset);
+    PlayerLevel Levels[header.EntryCount];
+};
+
+string ReadPlayerLevel(PlayerLevel& level)
+{
+    return Str("%d (XP: %d)", level.Index, level.RequiredXP);
+};
+
+LevelList Levels(Base.SubTableHeaders[0]);

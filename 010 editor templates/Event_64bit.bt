@@ -1,0 +1,32 @@
+//------------------------------------------------
+//--- 010 Editor v12.0.1 Binary Template
+//
+//      File: Event_64.bt
+//   Authors: not nsmhd
+//   Version: 1.0
+//   Purpose: 
+//  Category: UDG
+// File Mask: event64.bnd
+//  ID Bytes: 
+//   History: 8/3/2025: Initial version
+//------------------------------------------------
+
+#include "BND_64bit.bt"
+
+typedef struct
+{
+    strptr_t FileName;
+    int64_t Unknown1;
+    int64_t Unknown2;
+} EventEntry <name=GetEventFileName, optimize=false>;
+
+string GetEventFileName(EventEntry& entry)
+{
+    if (IsValidStrPtr(entry.FileName.Offset))
+        return entry.FileName.Value;
+
+    return "";
+};
+
+FSeek(Base.SubTableHeaders[0].DataOffset);
+EventEntry Events[Base.SubTableHeaders[0].EntryCount];

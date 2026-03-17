@@ -1,0 +1,59 @@
+//------------------------------------------------
+//--- 010 Editor v12.0.1 Binary Template
+//
+//      File: 
+//   Authors: 
+//   Version: 
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+
+// Common Structures
+typedef struct strptr
+{
+	uint64 Location;
+	local uint64 ___prePos___ = FTell();
+
+	FSeek(Location);
+	string Value;
+	FSeek(___prePos___);
+} strptr_t;
+
+// Specific Structures
+struct TableHeader
+{
+	uint64 Version;
+	uint64 TableStart;
+	uint64 Unknown1;
+	uint64 Unknown2;
+	uint EntryCount;
+};
+
+struct TableEntry
+{
+	uint64 Location;
+
+	local uint64 __prePos__ = FTell();
+
+	FSeek(Location);
+	strptr_t Value;
+	FSeek(__prePos__);
+};
+
+struct TableData
+{
+	uint64 EntryCount;
+	TableEntry Entries[EntryCount] <optimize=true>;
+};
+
+struct MapTable
+{
+	TableHeader Header;
+	FSeek(Header.TableStart);
+	TableData Contents;
+};
+
+MapTable Table;

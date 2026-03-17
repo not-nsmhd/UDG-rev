@@ -1,0 +1,41 @@
+//------------------------------------------------
+//--- 010 Editor v12.0.1 Binary Template
+//
+//      File: skill64.bt
+//   Authors: not nsmhd
+//   Version: 1.0
+//   Purpose: 
+//  Category: UDG
+// File Mask: skill64.bnd
+//  ID Bytes: 
+//   History:
+//------------------------------------------------
+
+#include "BND_64bit.bt"
+
+typedef struct
+{
+    int16_t Index;
+    int16_t XPCost;
+    int32_t Strength;
+
+    LocalizedEntryName Names <name="Localized Names">;
+    LocalizedEntryName Descriptions  <name="Localized Descriptions">;
+
+    int32_t Unknown2[2];
+} Skill <read=ReadSkill, optimize=false>;
+
+struct SkillList(SubTableHeader& header)
+{
+    FSeek(header.DataOffset);
+    Skill Skills[header.EntryCount];
+};
+
+string ReadSkill(Skill& skill)
+{
+    if (IsValidStrPtr(skill.Names.English.Offset))
+        return skill.Names.English.Value;
+    return "";
+};
+
+SkillList Skills(Base.SubTableHeaders[0]);

@@ -1,0 +1,245 @@
+//------------------------------------------------
+//--- 010 Editor v9.0.2 Binary Template
+//
+//      File: Types.bt
+//   Authors: samyuu
+//   Version: 1.9
+//   Purpose: Include common type definitions
+//------------------------------------------------
+
+//------------------------------------------------
+// - NOTE:
+//------------------------------------------------
+// This file was ~~stolen~~ copied from samyuu's Project DIVA AetSet format template.
+//------------------------------------------------
+
+//------------------------------------------------
+// - INCLUSION NOTE:
+//------------------------------------------------
+// Define either ADDRESS_SPACE_32BIT or ADDRESS_SPACE_64BIT before including this file
+// to determine the size of the size_t and offset_t types.
+//------------------------------------------------
+
+#ifndef TYPES_BT
+#define TYPES_BT
+
+//------------------------------------------------
+// Global Local Variables:
+//------------------------------------------------
+local int64 GlobalSeekOffset = 0;
+//------------------------------------------------
+
+//------------------------------------------------
+// Base Defines:
+//------------------------------------------------
+#define nullptr 0
+#define NULL    0
+
+#define SET_PRE_POS     local offset_t __prePos__ = FTell()
+#define SET_PRE_POS_ALT local offset_t ___prePos___ = FTell()
+#define RET_PRE_POS     FSeek(__prePos__)
+#define RET_PRE_POS_ALT FSeek(___prePos___)
+//------------------------------------------------
+
+//------------------------------------------------
+// Base Data Types:
+//------------------------------------------------
+typedef signed char     int8_t;
+typedef unsigned char   uint8_t;
+
+typedef signed short    int16_t;
+typedef unsigned short  uint16_t;
+
+typedef signed int      int32_t;
+typedef unsigned int    uint32_t;
+
+typedef signed int64    int64_t;
+typedef unsigned int64  uint64_t;
+
+typedef float           float32_t <bgcolor=cDkYellow>;
+typedef double          float64_t <bgcolor=cDkYellow>;
+
+typedef uint8_t         bool;
+typedef uint8_t         bool8_t;
+typedef uint32_t        bool32_t;
+
+#ifdef ADDRESS_SPACE_32BIT
+typedef uint32_t        size_t   <read=ReadSize, bgcolor=cDkRed>;
+typedef uint32_t        offset_t <read=ReadOffset, bgcolor=cDkGreen>;
+#else
+#ifdef ADDRESS_SPACE_64BIT
+typedef uint64_t        size_t   <read=ReadSize, bgcolor=cDkRed>;
+typedef uint64_t        offset_t <read=ReadOffset, bgcolor=cDkGreen>;
+#else
+#error "Types.bt: Address Space Undefined!
+#endif
+#endif
+typedef uint32_t        size32_t   <read=ReadSize32, bgcolor=cDkRed>;
+typedef uint64_t        size64_t   <read=ReadSize64, bgcolor=cDkRed>;
+//------------------------------------------------
+
+typedef uint8_t         unk8_t  <format=hex, bgcolor=cBlack>;
+typedef uint16_t        unk16_t <format=hex, bgcolor=cBlack>;
+typedef uint32_t        unk32_t <format=hex, bgcolor=cBlack>;
+typedef uint64_t        unk64_t <format=hex, bgcolor=cBlack>;
+
+typedef string          str_t   <bgcolor=cLtGreen>;
+typedef wstring         wstr_t  <bgcolor=cLtGreen>;
+typedef float32_t       frame_t <read=ReadFrame>;
+
+typedef uint32_t        color_t <read=ReadColor>;
+typedef int8_t          magicbytes_t[4] <bgcolor=cDkRed>;
+//------------------------------------------------
+
+//------------------------------------------------
+// Define Base Structs:
+//------------------------------------------------
+typedef struct 
+{
+    offset_t Offset <name="Offset">;
+
+    if (!IsValidStrPtr(Offset))
+        return;
+
+    SET_PRE_POS;
+    FSeek(Offset + GlobalSeekOffset);
+    str_t Value <name="String">;
+    RET_PRE_POS;
+
+} strptr_t <read=ReadStrPtr, write=WriteStrPtr, optimize=false>;
+
+typedef struct 
+{
+    offset_t Offset <name="Offset">;
+
+    if (!IsValidStrPtr(Offset))
+        return;
+
+    SET_PRE_POS;
+    FSeek(Offset + GlobalSeekOffset);
+    wstr_t Value <name="String">;
+    RET_PRE_POS;
+
+} wstrptr_t <read=ReadWStrPtr, write=WriteWStrPtr, optimize=false>;
+
+typedef struct
+{
+    float32_t X <name="X">, Y <name="Y">;
+} vec2_t <read=ReadVec2, optimize=false>;
+
+typedef struct
+{
+    float32_t X <name="X">, Y <name="Y">, Z <name="Z">;
+} vec3_t <read=ReadVec3, optimize=false>;
+
+typedef struct
+{
+    float32_t X <name="X">, Y <name="Y">, Z <name="Z">, W <name="W">;
+} vec4_t <read=ReadVec4, optimize=false>;
+
+typedef struct
+{
+    vec4_t Columns[4] <name="Columns">;
+} mat4_t <read=ReadMat4, optimize=false>;
+//------------------------------------------------
+
+//------------------------------------------------
+// Define Read / Write Functions:
+//------------------------------------------------
+string ReadSize(size_t size)
+{
+    string buffer;
+    return SPrintf(buffer, "Count: %d", size);
+}
+
+string ReadSize32(size32_t size)
+{
+    string buffer;
+    return SPrintf(buffer, "Count: %d", size);
+}
+
+string ReadSize64(size64_t size)
+{
+    string buffer;
+    return SPrintf(buffer, "Count: %d", size);
+}
+
+string ReadOffset(offset_t offset)
+{
+    string buffer;
+    return SPrintf(buffer, "Offset: 0x%X", offset);
+}
+
+string ReadFrame(frame_t frame)
+{
+    string buffer;
+    return SPrintf(buffer, "Frame: %.2f", frame);
+}
+
+string ReadColor(color_t color)
+{
+    string buffer;
+    return SPrintf(buffer, "0x%X", color);
+}
+
+string ReadStrPtr(strptr_t& strPtr)
+{
+    return IsValidStrPtr(strPtr.Offset) ? strPtr.Value : "nullptr";
+}
+
+wstring ReadWStrPtr(wstrptr_t& strPtr)
+{
+    return IsValidStrPtr(strPtr.Offset) ? strPtr.Value : "nullptr";
+}
+
+void WriteStrPtr(strptr_t& strPtr, string& input)
+{
+    if (IsValidStrPtr(strPtr.Offset))
+        strPtr.Value = input;
+}
+
+void WriteWStrPtr(wstrptr_t& strPtr, wstring& input)
+{
+    if (IsValidStrPtr(strPtr.Offset))
+        strPtr.Value = input;
+}
+
+string ReadVec2(vec2_t& vec2)
+{
+    string buffer;
+    return SPrintf(buffer, "{ X=%.2f Y=%.2f }", vec2.X, vec2.Y);
+}
+
+string ReadVec3(vec3_t& vec3)
+{
+    string buffer;
+    return SPrintf(buffer, "{ X=%.2f Y=%.2f Z=%.2f }", vec3.X, vec3.Y, vec3.Z);
+}
+
+string ReadVec4(vec4_t& vec4)
+{
+    string buffer;
+    return SPrintf(buffer, "{ X=%.2f Y=%.2f Z=%.2f W=%.2f }", vec4.X, vec4.Y, vec4.Z, vec4.W);
+}
+
+string ReadMat4(mat4_t& mat4)
+{
+    string buffer;
+    return SPrintf(buffer, "{ %.1f, %.1f, %.1f, %.1f; %.1f, %.1f, %.1f, %.1f; %.1f, %.1f, %.1f, %.1f; %.1f, %.1f, %.1f, %.1f }", 
+        mat4.Columns[0].X, mat4.Columns[0].Y, mat4.Columns[0].Z, mat4.Columns[0].W,
+        mat4.Columns[1].X, mat4.Columns[1].Y, mat4.Columns[1].Z, mat4.Columns[1].W,
+        mat4.Columns[2].X, mat4.Columns[2].Y, mat4.Columns[2].Z, mat4.Columns[2].W,
+        mat4.Columns[3].X, mat4.Columns[3].Y, mat4.Columns[3].Z, mat4.Columns[3].W);
+}
+//------------------------------------------------
+
+//------------------------------------------------
+// Define Helper Functions:
+//------------------------------------------------
+bool IsValidStrPtr(offset_t offset)
+{
+    return offset != nullptr && offset + sizeof(char) < FileSize();
+}
+//------------------------------------------------
+
+#endif /* TYPES_BT */

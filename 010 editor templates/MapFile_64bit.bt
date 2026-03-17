@@ -1,0 +1,57 @@
+//------------------------------------------------
+//--- 010 Editor v12.0.1 Binary Template
+//
+//      File: MapFile_64bit.bt
+//   Authors: not nsmhd
+//   Version: 1.0
+//   Purpose: Parse *.bnm map files from Windows and PS4 versions of Ultra Despair Girls
+//  Category: UDG
+// File Mask: *.bnm
+//  ID Bytes: 39 4D 53 50
+//   History: 
+//------------------------------------------------
+
+#define ADDRESS_SPACE_64BIT
+#include "Types.bt"
+
+// Data Types
+struct BNMVertex
+{
+	int Index <name="Index", bgcolor=0x327BA8>;
+	vec3_t Position <name="Position">;
+};
+
+// Blocks
+struct UnknownBlock1
+{
+	offset_t Start <name="Block Offset">;
+	offset_t End <name="Block Size">;
+
+	FSeek(FTell() - sizeof(offset_t));
+};
+
+struct BaseGeometryBlock
+{
+	offset_t Start <name="Block Offset">;
+	offset_t End <name="Block Size">;
+
+	FSeek(Start);
+
+	local int count = (End - Start) / sizeof(BNMVertex);
+	BNMVertex Vertices[count] <name="Vertices">;
+
+	FSeek(FTell() - sizeof(offset_t));
+};
+
+struct BNMFile
+{
+	magicbytes_t Magic <name="Magic">; // PSM9 or as little-endian integer 0x394D5350;
+	unk32_t Unknown <hidden=true>;
+
+	UnknownBlock1 unkBlock1 <hidden=true>;
+	BaseGeometryBlock baseGeometry <name="Base Geometry">;
+};
+
+// Actual parsing
+LittleEndian();
+BNMFile mapFile <name="Map File", open=true>;

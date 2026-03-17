@@ -1,0 +1,62 @@
+//------------------------------------------------
+//--- 010 Editor v12.0.1 Binary Template
+//
+//      File: pchr64.bt
+//   Authors: not nsmhd
+//   Version: 1.0
+//   Purpose: 
+//  Category: UDG
+// File Mask: pchr64.bnd
+//  ID Bytes: 
+//   History: 8/3/2025: Initial version
+//------------------------------------------------
+
+#include "BND_64bit.bt"
+
+typedef struct
+{
+    strptr_t ModelFileName;
+    strptr_t TextureFileNames[10];
+
+    int32_t Unknown1[16];
+
+    strptr_t ModelName;
+
+    int32_t Unknown2[16];
+} ModelEntry <read=GetModelEntryName, optimize=false>;
+
+typedef struct
+{
+    strptr_t FileName;
+    int64_t Unknown;
+
+    strptr_t Name;
+    int64_t Unknown2;
+
+    int64_t Unknown3[2];
+} ModelAnimationEntry <optimize=false>;
+
+struct ModelEntryList(SubTableHeader& header)
+{
+    FSeek(header.DataOffset);
+    ModelEntry Models[header.EntryCount];
+};
+
+struct ModelAnimationEntryList(SubTableHeader& header)
+{
+    FSeek(header.DataOffset);
+    ModelAnimationEntry ModelsAnimations[header.EntryCount];
+};
+
+string GetModelEntryName(ModelEntry& entry)
+{
+    if (IsValidStrPtr(entry.ModelName.Offset) && IsValidStrPtr(entry.ModelFileName.Offset))
+        return Str("%s (%s)", entry.ModelName.Value, entry.ModelFileName.Value);
+    else if (IsValidStrPtr(entry.ModelFileName.Offset))
+        return Str("%s", entry.ModelFileName.Value);
+
+    return "";
+};
+
+ModelEntryList Models(Base.SubTableHeaders[0]);
+ModelAnimationEntryList AnimationModels(Base.SubTableHeaders[1]);

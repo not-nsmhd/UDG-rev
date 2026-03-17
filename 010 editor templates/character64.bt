@@ -1,0 +1,55 @@
+//------------------------------------------------
+//--- 010 Editor v12.0.1 Binary Template
+//
+//      File: character64.bt
+//   Authors: not nsmhd
+//   Version: 1.0
+//   Purpose: 
+//  Category: UDG
+// File Mask: character64.bnd
+//  ID Bytes: 
+//   History: 8/3/2025: Initial version
+//------------------------------------------------
+
+#include "BND_64bit.bt"
+
+typedef struct
+{
+    int16_t Body;
+    int16_t BodyUnknown;
+    int16_t BodyShadow;
+
+    int16_t Face;
+    int16_t FaceUnknown;
+    int16_t FaceShadow;
+
+    int16_t Hair;
+    int16_t HairUnknown;
+    int16_t HairShadow;
+
+    int16_t HandItems[2];
+
+    int16_t Unknown;
+    int16_t HeadItem;
+    int16_t Unknown2[3];
+
+    float Unknown3[8];
+
+    strptr_t Name;
+} CharacterModelEntry <read=GetModelEntryName, optimize=false>;
+
+struct CharacterModelEntryList(SubTableHeader& header)
+{
+    FSeek(header.DataOffset);
+    CharacterModelEntry Models[header.EntryCount];
+};
+
+string GetModelEntryName(CharacterModelEntry& entry)
+{
+    if (IsValidStrPtr(entry.Name.Offset))
+        return Str("%s", entry.Name.Value);
+
+    return "";
+};
+
+CharacterModelEntryList Models(Base.SubTableHeaders[0]);
