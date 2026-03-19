@@ -1,0 +1,49 @@
+//------------------------------------------------
+//--- 010 Editor v12.0.1 Binary Template
+//
+//      File: font_rule64.bt
+//   Authors: not nsmhd
+//   Version: 1.0
+//   Purpose: 
+//  Category: UDG
+// File Mask: font_rule64.bnd
+//  ID Bytes: 
+//   History:
+//------------------------------------------------
+
+#include "BND_64bit.bt"
+
+enum <uint8_t> FontIndex
+{
+    Font_Normal = 0,
+    Font_Deco = 1,
+    Font_Kids = 2
+};
+
+typedef struct
+{
+    FontIndex Font;
+    uint8_t EnableOutline;
+
+    int16_t GlyphSize;
+
+    int16_t LineSpacingOffset;
+    int16_t Unknown3B;
+
+    color_t Color;
+
+    color_t Unknown4;
+    color_t Unknown5;
+    color_t OutlineColor;
+} TextStyle <optimize=false>;
+
+struct TextStyleList(SubTableHeader& header)
+{
+    FSeek(header.DataOffset);
+    TextStyle Styles[header.EntryCount];
+};
+
+TextStyleList Japanese(Base.SubTableHeaders[0]);
+TextStyleList English(Base.SubTableHeaders[1]);
+TextStyleList Chinses(Base.SubTableHeaders[2]);
+TextStyleList Korean(Base.SubTableHeaders[3]);

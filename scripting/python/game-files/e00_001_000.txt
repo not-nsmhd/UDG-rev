@@ -1,0 +1,52 @@
+op_0x36(0, 6);
+GoToLabel(500);
+	SkipShort_0x37(0, 0);
+	
+	DisplayTextbox(1);
+	
+	SetNametag(dummy1);
+	Text(Testing);
+	WaitForInput();
+	
+	SetNametag(dummy1);
+	Text(Testing 2);
+	WaitForInput();
+	
+	DisplayTextbox(0);
+	Text(DisplayTextbox(0));
+	WaitForInput();
+	
+	DisplayTextbox(1);
+	Text(DisplayTextbox(1));
+	WaitForInput();
+	
+	DisplayTextbox(2);
+	Text(DisplayTextbox(2));
+	WaitForInput();
+	
+	DisplayTextbox(1);
+	Text(DisplayTextbox(1));
+	WaitForInput();
+	
+	ScreenFlash(255, 255, 255, 1, 1, 1, 255);
+	Text(ScreenFlash(255, 255, 255, 1, 1, 1, 255));
+	WaitForInput();
+	
+	ScreenFlash(255, 0, 255, 1, 1, 1, 255);
+	Text(ScreenFlash(255, 0, 255, 1, 1, 1, 255));
+	WaitForInput();
+	
+	ScreenFlash(255, 255, 0, 1, 1, 1, 255);
+	Text(ScreenFlash(255, 255, 0, 1, 1, 1, 255));
+	WaitForInput();
+	
+	ValueOperation(6, =, 1);
+	op_0x29(0, 65, 0);
+	op_0x11();
+	SkipShort_0x37(0, 1);
+	ValueOperation(6, =, 0);
+	op_0x29(0, 65, 0);
+	op_0x11();
+	DefineLabel(500);
+op_0x11();
+End();

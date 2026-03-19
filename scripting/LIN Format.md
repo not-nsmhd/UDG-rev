@@ -39,6 +39,7 @@ Note: In the files every opcode is encoded with an added 0x7000 value.
 |SpfCommand|0x30|8|
 |FlagTest|0x32|4|
 |ValueTest|0x33|5|
+|SpfCommandParam|0x39|4|
 |NoOp|0x4F|0|
 
 ## Opcodes
@@ -48,7 +49,7 @@ Note: In the files every opcode is encoded with an added 0x7000 value.
 |Text Count|uint16_t|
 
 ~~Defines the amount of strings in the file.~~<br/><br/>
-The game ignores this opcode and skips the argument bytes when encountered. The actual amount of strings is defined at the beginning string array itself as a little endian 32-bit integer.<br/><br/>
+The game ignores this opcode and skips the argument bytes when encountered. The actual amount of strings is defined at the beginning of the string array itself as a little endian 32-bit integer.<br/><br/>
 Note that this opcode is also present in the scripts without any strings in them, in which case the text count is set to 0.
 
 ### Text
@@ -56,7 +57,7 @@ Note that this opcode is also present in the scripts without any strings in them
 |---|---|
 |Index|uint16_t|
 
-Defines index into the string array.
+Defines index of a string in the string array, if present.
 
 ### Movie
 |Argument|Data Type|
@@ -103,7 +104,7 @@ Sets the nametag on top of the textbox if its enabled. See `Nametags.md` for nam
 |Time|uint8_t|
 
 `Type` defines the type of fade (`0` - In. `1` - Out.)<br/>
-`Color Index` defines the index of the fade in the `params64.bnd` file at offset 952 in BGRA order.<br/>
+`Color Index` defines the index of the fade in the `params64.bnd` file at offset 952 in BGRX order.<br/>
 `Time` defines the amount of time it takes for the fade to finish. 60 seems to make the fade last one second.<br/>
 
 The script won't continue execution until the fade is finished.
@@ -183,7 +184,7 @@ Ends script execution.
 |Argument 2|int16_t|
 |Argument 3|int16_t|
 
-Executes a game-specific command. ~~See `SpfCommands.md` for details.~~
+Executes a game-specific command. See `SpfCommands.md` for details.
 
 ### FlagTest
 |Argument|Data Type|
@@ -205,13 +206,16 @@ Tests a script value against a test value and skips the next command if the resu
 
 #### Test Types
 *scriptValue is a value at index `Value Index`.*<br/>
-*opValue is `Operation Value`.*
+*testValue is `Test Value`.*
 
 |Index|Test|
 |---|---|
-|0|`scriptValue == opValue`|
-|1|`scriptValue != opValue`|
-|2|`scriptValue > opValue`|
-|3|`scriptValue < opValue`|
-|4|`scriptValue >= opValue`|
-|5|`scriptValue <= opValue`|
+|0|`scriptValue == testValue`|
+|1|`scriptValue != testValue`|
+|2|`scriptValue > testValue`|
+|3|`scriptValue < testValue`|
+|4|`scriptValue >= testValue`|
+|5|`scriptValue <= testValue`|
+
+### SpfCommandParam
+Chooses a parameter of an SpfCommand that the next LIN commands will apply to. See `SpfCommands.md` for more details.

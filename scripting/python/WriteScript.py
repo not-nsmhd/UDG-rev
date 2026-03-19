@@ -75,7 +75,7 @@ def initOpcodeList():
     
     udgOpcodes.append(Opcode("op_0x20", 0x20, 3));
     udgOpcodes.append(Opcode("op_0x21", 0x21, 3));
-    udgOpcodes.append(Opcode("op_0x22", 0x22, 2));
+    udgOpcodes.append(Opcode("LoadEV8", 0x22, 2));
     udgOpcodes.append(Opcode("op_0x23", 0x23, 2));
     
     udgOpcodes.append(Opcode("SkipShort_0x24", 0x24, 2));
@@ -97,9 +97,9 @@ def initOpcodeList():
     
     udgOpcodes.append(Opcode("op_0x31", 0x31, 6));
     
-    udgOpcodes.append(Opcode("FlagCheck", 0x32, 4));
+    udgOpcodes.append(Opcode("FlagTest", 0x32, 4));
+    udgOpcodes.append(Opcode("ValueTest", 0x33, 5));
     
-    udgOpcodes.append(Opcode("op_0x33", 0x33, 5));
     udgOpcodes.append(Opcode("op_0x34", 0x34, 5));
     udgOpcodes.append(Opcode("op_0x35", 0x35, 5));
     udgOpcodes.append(Opcode("op_0x36", 0x36, 2));
@@ -282,6 +282,23 @@ def ConvertEscapeSequences(string):
     
     return strBytes;
 
+def GetValueOperationType(string):
+    opType = 0;
+    
+    match(string[0]):
+        case '=':
+            opType = 0;
+        case '+':
+            opType = 1;
+        case '-':
+            opType = 2;
+        case '*':
+            opType = 3;
+        case '/':
+            opType = 4;
+            
+    return opType;
+
 def main():
     if (len(sys.argv) < 3):
         print("Usage: WriteScript.py <input.txt> <output.lin>");
@@ -325,6 +342,11 @@ def main():
                 case 0x15: # SetNametag
                     nametagIndex = GetNametagIndex(args[0]);
                     argBytes = struct.pack(">B", nametagIndex);
+                case 0x1A: # ValueOperation
+                    valueIndex = int(args[0]);
+                    opValue = int(args[2]);
+                    opType = GetValueOperationType(args[1]);
+                    argBytes = struct.pack(">BBH", valueIndex, opType, opValue);
                 case 0x18 | 0x1B: # DefineLabel | GoToLabel
                     argBytes = struct.pack(">H", int(args[0]));
                 case 0x32: # FlagCheck

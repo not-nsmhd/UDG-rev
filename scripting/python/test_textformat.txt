@@ -1,0 +1,56 @@
+op_0x36(0, 6);
+GoToLabel(500);
+	SkipShort_0x37(0, 0);
+	
+	DisplayTextbox(1);
+	
+	SetNametag(dummy1);
+	Text(#c0FF Color (c0FF));
+	WaitForInput();
+	
+	Text(#dF000 Testing (dF000));
+	WaitForInput();
+	
+	Text(#p1 Testing (p1));
+	WaitForInput();
+	
+	Text(#i25# Spacing (i25));
+	WaitForInput();
+	
+	Text(#i-25# Spacing (i-25));
+	WaitForInput();
+	
+	Text(#l9999# Testing (l9999));
+	WaitForInput();
+	
+	Text(#z25# Testing (z25));
+	WaitForInput();
+	
+	Text(#z125# Testing (z125));
+	WaitForInput();
+	
+	Text(#R25# Testing (R25));
+	WaitForInput();
+	
+	Text(#s Testing (s));
+	WaitForInput();
+	
+	Text(#e Outline 1 (e)\n#e Outline 2 (e) #E Outline 3 (E) #E Outline 4 (E));
+	WaitForInput();
+	
+	Text(#x25# X Offset (x25)\n#y-128# Y Offset (y-128));
+	WaitForInput();
+	
+	Text(#s #u25# Character Width (u25)\n#u256# Character Width (u256));
+	WaitForInput();
+	
+	ValueOperation(6, =, 1);
+	op_0x29(0, 65, 0);
+	op_0x11();
+	SkipShort_0x37(0, 1);
+	ValueOperation(6, =, 0);
+	op_0x29(0, 65, 0);
+	op_0x11();
+	DefineLabel(500);
+op_0x11();
+End();

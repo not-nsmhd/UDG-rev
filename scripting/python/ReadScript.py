@@ -96,9 +96,9 @@ def initOpcodeList():
     
     udgOpcodes.append(Opcode("op_0x31", 0x31, 6));
     
-    udgOpcodes.append(Opcode("FlagCheck", 0x32, 4));
+    udgOpcodes.append(Opcode("FlagTest", 0x32, 4));
+    udgOpcodes.append(Opcode("ValueTest", 0x33, 5));
     
-    udgOpcodes.append(Opcode("op_0x33", 0x33, 5));
     udgOpcodes.append(Opcode("op_0x34", 0x34, 5));
     udgOpcodes.append(Opcode("op_0x35", 0x35, 5));
     udgOpcodes.append(Opcode("op_0x36", 0x36, 2));
